@@ -532,6 +532,8 @@ message OsmAndPoiNameIndex {
 	message OsmAndPoiNameIndexData {
 		// can contain multiple data offsets
 		repeated OsmAndPoiNameIndexDataAtom atoms = 3;
+    // optional super bloom for all tokens to prefilter loading of all atom leafs (if not present, all atom leafs are loaded)
+    optional bytes keyBloom = 6;
 	}
 }
 
@@ -543,6 +545,8 @@ message OsmAndPoiNameIndexDataAtom {
 	// shift to OsmAndPoiBoxData message from OsmAndPoiIndex.start
 	// message is started when body is started
 	optional fixed32 shiftTo = 14;
+  // optional hash to prefilter atom leaf loading with shiftTo (if not present, atom leaf is loaded)
+	optional int32 atomHash = 15;
 }
 
 message OsmAndCategoryTable {
