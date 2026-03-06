@@ -545,8 +545,8 @@ message OsmAndPoiNameIndexDataAtom {
 	// shift to OsmAndPoiBoxData message from OsmAndPoiIndex.start
 	// message is started when body is started
 	optional fixed32 shiftTo = 14;
-  // optional surrogate name to prefilter atom leaf loading with shiftTo (if not present, atom leaf is loaded)
-	optional string atomName = 15;
+  // optional bloom hashcode to prefilter atom leaf loading with shiftTo (if not present, atom leaf is loaded)
+	optional int32 atomBloom = 15;
 }
 
 message OsmAndCategoryTable {
