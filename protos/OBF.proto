@@ -523,7 +523,14 @@ message OsmAndPoiIndex {
 
 }
 
+message OsmAndBloomFilterAlgorithm {
+	required uint32 version = 1; // version or algoritym
+	optional bytes data = 4; // data could be used in future as dictionary or smth
+}
+
 message OsmAndPoiNameIndex {
+	repeated OsmAndBloomFilterAlgorithm filters = 2;
+	
 	// shift to OsmAndPoiNameIndexData starting from OsmAndPoiIndex message
 	// encoded as fixed32 length delimited
 	required IndexedStringTable table = 3;
@@ -532,8 +539,6 @@ message OsmAndPoiNameIndex {
 	message OsmAndPoiNameIndexData {
 		// can contain multiple data offsets
 		repeated OsmAndPoiNameIndexDataAtom atoms = 3;
-    // optional super bloom for all tokens to prefilter loading of all poi boxes (if not present, all them are loaded)
-    optional bytes indexBloom = 6;
 	}
 }
 
@@ -542,11 +547,13 @@ message OsmAndPoiNameIndexDataAtom {
 	optional uint32 zoom = 2;
 	optional uint32 x = 3;
 	optional uint32 y = 4;
+    
+	repeated bytes bloomIndex = 5; // 1st byte is version or algorithm, multiple filters could be applied
+    
 	// shift to OsmAndPoiBoxData message from OsmAndPoiIndex.start
 	// message is started when body is started
 	optional fixed32 shiftTo = 14;
-  // optional bloom hashcode to prefilter poi box leafs loading with shiftTo (if not present, atom leafs are loaded)
-	optional bytes boxBloom = 15;
+    
 }
 
 message OsmAndCategoryTable {
@@ -626,7 +633,7 @@ message OsmAndPoiBoxDataAtom {
 
   repeated uint32 categories = 4;
   repeated uint32 subcategories = 5; // v1.7
-
+		
   optional string name = 6;
   optional string nameEn = 7;
   optional uint64 id = 8;  
